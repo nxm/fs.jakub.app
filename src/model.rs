@@ -11,6 +11,9 @@ pub struct FileModel {
     pub md5: Option<String>,
     pub content_type: Option<String>,
     pub size: Option<i32>,
+    #[serde(rename = "expiresAt")]
+    pub expires_at: Option<NaiveDateTime>,
+    pub deleted_at: Option<NaiveDateTime>,
     #[serde(rename = "createdAt")]
     pub created_at: Option<NaiveDateTime>,
 }

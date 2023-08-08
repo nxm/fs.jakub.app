@@ -28,6 +28,7 @@ serde = "1.0.183"
 chrono = { version = "0.4.19", features = ["serde"] }
 tokio-util = { version = "0.7.8", features = ["io"] }
 hyper = "0.14.27"
+lazy_static = "1.4.0"
 
 [profile.dev]
 debug = 0

@@ -802,6 +802,7 @@ dependencies = [
  "dotenv",
  "futures",
  "hyper",
+ "lazy_static",
  "leptos",
  "leptos_axum",
  "leptos_meta",

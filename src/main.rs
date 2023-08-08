@@ -12,9 +12,10 @@ use futures::SinkExt;
 use sqlx::{postgres::{PgPoolOptions}, ConnectOptions, Postgres, Pool};
 use tracing::{info, log};
 use anyhow::Context;
-use std::{str::FromStr};
+use std::{str::FromStr, thread};
 use std::sync::Arc;
 use axum::response::IntoResponse;
+use crate::misc::cleaner;
 use crate::route::create_router;
 
 pub struct AppState {
@@ -43,6 +44,8 @@ async fn main() -> anyhow::Result<()> {
     info!("Connected to database!");
 
 
+    tokio::spawn(cleaner(Arc::new(AppState { db: pool.clone() })));
+
     info!("Starting server...");
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
     let app = create_router(Arc::new(AppState { db: pool.clone() }));
@@ -50,6 +53,7 @@ async fn main() -> anyhow::Result<()> {
         .serve(app.into_make_service())
         .await
         .unwrap();
+
 
     Ok(())
 }

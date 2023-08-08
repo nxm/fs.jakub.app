@@ -9,6 +9,8 @@ create table files
     md5 varchar(60),
     content_type  varchar(50),
     size          int,
+    expires_at    timestamp,
+    deleted_at    timestamp,
     created_at    timestamp default current_timestamp
 );
 
