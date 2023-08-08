@@ -1,0 +1,33 @@
+[package]
+name = "fileshare"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tokio = { version = "1.29.1", features = ["full"] }
+axum = "0.6.18"
+leptos = "0.4.2"
+leptos_axum = "0.4.2"
+leptos_meta = "0.4.2"
+futures = "0.3.28"
+axum_typed_multipart = "0.5.2"
+sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres", "json", "macros", "chrono"] }
+tracing = "0.1.37"
+tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
+anyhow = "1.0.72"
+dotenv = "0.15.0"
+tower = { version = "0.4", features = ["full"] }
+tower-http = { version = "0.4.3", features = ["full"] }
+serde_json = "1.0.104"
+md5 = "0.7.0"
+rand = "0.8.5"
+load_file = "1.0.1"
+serde = "1.0.183"
+chrono = { version = "0.4.19", features = ["serde"] }
+tokio-util = { version = "0.7.8", features = ["io"] }
+hyper = "0.14.27"
+
+[profile.dev]
+debug = 0
