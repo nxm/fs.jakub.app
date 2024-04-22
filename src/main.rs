@@ -1,9 +1,10 @@
-#![feature(result_option_inspect)]
-
 mod handler;
 mod route;
 mod misc;
-mod model;
+mod components;
+mod views;
+mod error;
+mod file;
 
 use std::net::SocketAddr;
 use tracing_subscriber::prelude::*;
@@ -12,9 +13,11 @@ use futures::SinkExt;
 use sqlx::{postgres::{PgPoolOptions}, ConnectOptions, Postgres, Pool};
 use tracing::{info, log};
 use anyhow::Context;
-use std::{str::FromStr, thread};
+use std::{env, str::FromStr, thread};
 use std::sync::Arc;
+use std::time::Duration;
 use axum::response::IntoResponse;
+use sqlx::postgres::PgConnectOptions;
 use crate::misc::cleaner;
 use crate::route::create_router;
 
@@ -33,12 +36,15 @@ async fn main() -> anyhow::Result<()> {
         .init();
     dotenv::dotenv().ok();
 
-    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
-
-    info!("Connecting to database...");
+    let pg_url = env::var("DATABASE_URL").expect("Invalid DATABASE_URL env var");
     let pool = PgPoolOptions::new()
-        .max_connections(50)
-        .connect(&database_url)
+        .min_connections(2)
+        .max_connections(100)
+        .acquire_timeout(Duration::from_secs(120))
+        .connect_with(
+            PgConnectOptions::from_str(&pg_url)
+                .context("Could not create pg otions from given url")?,
+        )
         .await
         .context("Could not connect to postgres!")?;
     info!("Connected to database!");
@@ -47,7 +53,7 @@ async fn main() -> anyhow::Result<()> {
     tokio::spawn(cleaner(Arc::new(AppState { db: pool.clone() })));
 
     info!("Starting server...");
-    let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
+    let addr = SocketAddr::from(([0, 0, 0, 0], 2115));
     let app = create_router(Arc::new(AppState { db: pool.clone() }));
     axum::Server::bind(&addr)
         .serve(app.into_make_service())

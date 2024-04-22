@@ -5,7 +5,7 @@ use tracing::{error, info};
 use crate::AppState;
 use crate::handler::STORE_DIR;
 use crate::{
-    model::FileModel,
+    file::File,
 };
 
 pub fn get_random_hash(len: i32) -> String {
@@ -41,7 +41,7 @@ pub async fn cleaner(app_state: Arc<AppState>) {
 
     loop {
         let query_result = sqlx::query_as!(
-            FileModel,
+            File,
             "SELECT * FROM files WHERE expires_at < $1 AND deleted_at IS NULL",
             chrono::Utc::now().naive_utc()
         ).fetch_all(&app_state.db).await;

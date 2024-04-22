@@ -13,7 +13,7 @@ leptos_axum = "0.4.2"
 leptos_meta = "0.4.2"
 futures = "0.3.28"
 axum_typed_multipart = "0.5.2"
-sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres", "json", "macros", "chrono"] }
+sqlx = { version = "0.7.4", features = ["runtime-tokio-rustls", "postgres", "json", "macros", "chrono"] }
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 anyhow = "1.0.72"
